@@ -68,18 +68,25 @@ def login(browser, phone, pwd):
     button = browser.find_element(By.CSS_SELECTOR, '#nav > div > ul > li.loginstyle > a > span:nth-child(1)')
     button.click()
 
-    browser.switch_to.frame('layui-layer-iframe1')
+    WebDriverWait(browser, 180).until(
+        EC.presence_of_element_located(
+            (By.CSS_SELECTOR, "#layui-layer-iframe100001"))
+    )
+
+    browser.switch_to.frame('layui-layer-iframe100001')
 
     account_input = browser.find_element(By.ID, 'account1')
     pwd_input = browser.find_element(By.ID, 'pwd')
     account_input.send_keys(phone)
     pwd_input.send_keys(pwd)
 
-    get_code_and_confirm(browser)
+    login_btn = browser.find_element(By.CSS_SELECTOR, "body > div > div.login-item > button")
+    login_btn.click()
 
+    # get_code_and_confirm(browser)
     browser.switch_to.default_content()
     try:
-        element_present = EC.presence_of_element_located((By.NAME, "layui-layer-iframe1"))
+        element_present = EC.presence_of_element_located((By.NAME, "layui-layer-iframe100001"))
         WebDriverWait(browser, 120).until_not(element_present)
         logging.info("登录成功")
     except TimeoutException:
