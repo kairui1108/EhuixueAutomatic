@@ -12,22 +12,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-import logging
-from rich.logging import RichHandler
-from rich.traceback import install
-
-install(max_frames=1)
-
-FORMAT = '%(message)s'
-logging.basicConfig(
-    level='INFO',
-    format=FORMAT,
-    datefmt='[%X]',
-    handlers=[RichHandler(rich_tracebacks=True)]
-)
-
-logging = logging.getLogger('rich')
-
 
 def init_browser_on_window():
     options = ChromeOptions()
@@ -269,4 +253,5 @@ if __name__ == '__main__':
     # 注意config.yaml 路径
     # 环境类型： win centos win-no-head
     # phone 账号  pwd 密码   cid 需要刷的课程的cid
+    from src.exercises.logUtil import log as logging
     main(env="win", phone="1621*******", pwd="1234", cid=39271)
