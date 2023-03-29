@@ -7,20 +7,21 @@ import requests
 
 class Getter:
     base_url = "https://www.ehuixue.cn/index/study/joinquiz?eid="
-    cookie = ""
     headers = ""
 
     def __init__(self, cookie):
         self.cookie = cookie
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-            'accept': '*/*',
-            'Cookie': cookie
+            'accept': '*/*'
         }
+        self.session = requests.session()
+        self.cookie = cookie
 
     def get_by_eid(self, eid):
         url = self.base_url + str(eid)
         try:
+            self.session.get(url=url, headers=self.headers, cookies=self.cookie)
             r = requests.get(url, headers=self.headers)
             return r.json().get('data').get('seid')
         except:

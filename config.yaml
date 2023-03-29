@@ -4,13 +4,13 @@ database:
   password: 123456
   port: 3306
   database: ehx
-user:
-  # ck of the pioneer
-  pioneer_cookie:
-  # set a username for your account which need to finish all work
-  todo_user_name: trk
-  # get your ck for your account
-  todo_user_cookie:
+pioneer:
+  name: name
+  pwd: pwd
+todo_user:
+  name: 17198642616
+  pwd: TANRUIKAI888
+exercise:
   # The eid at the beginning of the exercises, the eid of the first set of exercises that you have to do in each class
   start_eid: 292025
   # The eid at the end of the exercises, the eid of the last set of exercises to be done in each class

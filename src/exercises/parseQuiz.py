@@ -24,13 +24,13 @@ class Paser:
         self.cookie = cookie
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-            'accept': '*/*',
-            'Cookie': cookie
+            'accept': '*/*'
         }
+        self.session = requests.session()
 
     def is_done(self, eid, seid):
         url = self.base_url + 'eid=' + str(eid) + '&' + 'seid=' + str(seid)
-        doc = pq(requests.get(url, headers=self.headers).text)
+        doc = pq(self.session.get(url, headers=self.headers, cookies=self.cookie).text)
         score = doc('div.score')
         noscore = doc('div.noscore')
         if len(score) > 0 or len(noscore) > 0:
@@ -39,7 +39,7 @@ class Paser:
 
     def get_ans(self, eid, seid):
         url = self.base_url + 'eid=' + str(eid) + '&' + 'seid=' + str(seid)
-        doc = pq(requests.get(url, headers=self.headers).text)
+        doc = pq(self.session.get(url, headers=self.headers, cookies=self.cookie).text)
         post_body = {}
         score = doc('div.score')
         if not score:
