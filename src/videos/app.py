@@ -18,9 +18,6 @@ def init_browser_on_window():
     options.add_experimental_option('excludeSwitches', ['enable-automation'])
     options.add_experimental_option('useAutomationExtension', False)
 
-    # options.add_argument("--disable-extensions-except")
-    # options.add_argument("--load-extension=C:\\Users\\ruikai\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\dhdgffkkebhmkfjojejmpbldmpobfkfo")
-
     return_browser = webdriver.Chrome(options=options)
     return_browser.execute_cdp_cmd('Page.addScriptToEvaluateOnNewDocument', {
         'source': 'Object.defineProperty(navigator, "webdriver", {get: () => undefined})'
@@ -90,7 +87,7 @@ def login(browser, phone, pwd):
         WebDriverWait(browser, 120).until_not(element_present)
         logging.info("登录成功")
     except TimeoutException:
-        logging.info("登录超时，2min内没有成功登录")
+        logging.error("登录超时，2min内没有成功登录，请检查是否需要手动登录一次")
 
 
 def get_captcha_code(browser):
