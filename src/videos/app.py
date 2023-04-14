@@ -12,6 +12,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+logging = None
+
 
 def init_browser_on_window():
     options = ChromeOptions()
@@ -190,11 +192,11 @@ def enter_code(browser, video_duration):
     try:
         # 验证码检测
         iframe = EC.presence_of_element_located(
-            (By.CSS_SELECTOR, "#layui-layer-iframe1"))
+            (By.CSS_SELECTOR, "#layui-layer-iframe100001"))
         WebDriverWait(browser, int(video_duration) + 1).until(iframe)
         logging.info("检测到验证码,开始识别...")
         # todo:填写验证码
-        browser.switch_to.frame('layui-layer-iframe1')
+        browser.switch_to.frame('layui-layer-iframe100001')
         get_code_and_confirm(browser)
         browser.switch_to.default_content()
 
@@ -257,5 +259,5 @@ if __name__ == '__main__':
     # 注意config.yaml 路径
     # 环境类型： win centos win-no-head
     # phone 账号  pwd 密码   cid 需要刷的课程的cid
-    from src.exercises.logUtil import log as logging
+    # from src.exercises.logUtil import log as logging
     main(env="win", phone="1621*******", pwd="1234", cid=39271)

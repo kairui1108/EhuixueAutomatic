@@ -1,3 +1,4 @@
+import src.videos.app
 from src.videos.app import *
 import logging
 import tkinter as tk
@@ -88,5 +89,5 @@ class GUITextHandler(logging.Handler):
 
 if __name__ == "__main__":
     app = Application()
-    logging = app.logger
+    src.videos.app.logging = app.logger
     app.mainloop()
