@@ -7,8 +7,8 @@ build_exe_options = {
 }
 
 base = None
-if sys.platform == "win32":
-    base = None # 隐藏控制台窗口
+# base = 'Win32GUI' if sys.platform == 'win32' else None
+
 
 setup(
     name="AppGui",
