@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: read
+  packages: write
 
 jobs:
   build:
@@ -32,3 +33,25 @@ jobs:
     - name: build
       run: |
         python3 setup_gui.py build
+
+    - name: create release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v1.0.0
+        release_name: Release 1.0.0
+        body: |
+          This is the first release of my Python application.
+        draft: false
+        prerelease: false
+    - name: upload release asset
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/
+        asset_name: exe.linux-x86_64-3.10
+        asset_content_type: application/zip
