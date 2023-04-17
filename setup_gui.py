@@ -6,7 +6,7 @@ build_exe_options = {
     "include_files": ["chromedriver"] # 将chromedriver.exe文件包括在打包后的应用程序中
 }
 
-base = "win32gui"
+base = None
 # base = 'Win32GUI' if sys.platform == 'win32' else None
 
 

@@ -33,7 +33,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: build
       run: |
-        python3 setup_gui.py build --plat-name=win32
+        python3 setup_gui.py build
 
     - name: create release
       id: create_release
