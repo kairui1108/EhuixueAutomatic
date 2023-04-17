@@ -29,16 +29,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install cx_Freeze
+        apt-get install mingw-w64
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: build
       run: |
-        python3 setup_gui.py build
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: exe.linux-x86_64-3.10
-        path: ./build/
+        python3 setup_gui.py build --plat-name=win32
 
     - name: create release
       id: create_release
@@ -48,19 +43,25 @@ jobs:
       with:
         tag_name: v1.0.0
         release_name: Release 1.0.0
-#        body: |
-#          This is the first release of my Python application.
+        body: |
+          This is the first release of my Python application.
         draft: false
         prerelease: false
-#    - name: upload release asset
-#      uses: actions/upload-release-asset@v1.0.2
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create_release.outputs.upload_url }}
-#        asset_path: ./build/
-#        asset_name: exe.linux-x86_64-3.10
-#        asset_content_type: application/zip
+    - name: upload release asset
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/
+        asset_name: exe.linux-x86_64-3.10
+        asset_content_type: application/zip
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: exe.linux-x86_64-3.10
+        path: ./build/
 
     - name: Attach Artifact to Release
       uses: actions/upload-release-asset@v1.0.2
