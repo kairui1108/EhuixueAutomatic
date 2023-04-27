@@ -58,7 +58,10 @@ jobs:
         release_name: Release v1.1.0  # replace with your actual release name
         body: |
           the latest release v1.1.0
-
+    - name: debug_file
+      run: |
+          ls
+          locate ehuixue.zip
     - name: Upload release asset
       uses: actions/upload-release-asset@v1
       env:
