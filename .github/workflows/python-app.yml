@@ -37,6 +37,9 @@ jobs:
       with:
         name: ehuixue.zip
         path: build\exe.win-amd64-3.10  # replace with your actual build output directory
+    - name: debug
+      run: | 
+        ls
 
   release:
     needs: build
