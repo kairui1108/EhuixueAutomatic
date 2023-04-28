@@ -26,7 +26,7 @@
 
 - 克隆代码
 
-  ```git clone https://github.com/kairui1108/ehx-tutorial.git```
+  ```git clone https://github.com/kairui1108/EhuixueAutomatic.git```
 
 - 安装依赖
 

@@ -95,7 +95,7 @@ def login(browser, phone, pwd):
 def get_captcha_code(browser):
     captcha_element = browser.find_element(By.ID, 'verifyimg1')
     captcha_url = captcha_element.get_attribute('src')
-    logging.debug(captcha_url)
+    # logging.debug(captcha_url)
 
     ck = get_ck(browser)
     return get_code(captcha_url, ck)
@@ -132,7 +132,7 @@ def get_ck(browser):
         name = ck_dict['name']
         value = ck_dict['value']
         ck = ck + str(name) + "=" + str(value) + ";"
-    logging.info(ck)
+    # logging.info(ck)
     return ck
 
 
@@ -168,7 +168,7 @@ def play(browser):
     try:
         next_btn_present = EC.presence_of_element_located(
             (By.CSS_SELECTOR, "#app > section > main > div.left > div > div.cview > div.studyend > div > button"))
-        WebDriverWait(browser, int(video_duration) + 1).until(next_btn_present)
+        WebDriverWait(browser, int(video_duration) + 30).until(next_btn_present)
 
         # 点击播放下一节视频
         time.sleep(2)
@@ -195,7 +195,6 @@ def enter_code(browser, video_duration):
             (By.CSS_SELECTOR, "#layui-layer-iframe100001"))
         WebDriverWait(browser, int(video_duration) + 1).until(iframe)
         logging.info("检测到验证码,开始识别...")
-        # todo:填写验证码
         browser.switch_to.frame('layui-layer-iframe100001')
         get_code_and_confirm(browser)
         browser.switch_to.default_content()
