@@ -3,7 +3,7 @@ import json
 import threading
 import time
 import requests
-import yaml
+from src.videos.config import config
 from selenium.common import TimeoutException, NoSuchElementException
 from selenium import webdriver
 from selenium.webdriver import ChromeOptions
@@ -118,10 +118,9 @@ def get_code(captcha_url, ck):
 
 
 def get_api_info():
-    with open('../../config.yaml', encoding='utf-8') as f:
-        config = yaml.safe_load(f)
-    api_uname = config['api']['uname']
-    api_pwd = config['api']['pwd']
+
+    api_uname = config["uname"]
+    api_pwd = config["api_pwd"]
     return api_uname, api_pwd
 
 
@@ -237,6 +236,9 @@ def main(env, phone, pwd, cid):
     else:
         logging.error("请选择环境: centos 或 win")
         return
+    phone = config['phone']
+    pwd = config['pwd']
+    cid = config['cid']
     login(browser, phone, pwd)
     enter_class(browser, cid)
     time.sleep(5)

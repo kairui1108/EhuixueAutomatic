@@ -9,7 +9,7 @@ import threading
 class Application(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.version = "v1.0"
+        self.version = config['version']
         self.author = "ruikai"
 
         self.title("e会学-杀手" + self.version)
@@ -49,30 +49,25 @@ class Application(tk.Tk):
 
     def handle_submit(self):
         # 获取输入框中的数据
-        account = self.entry1.get()
-        password = self.entry2.get()
-        cid = self.entry3.get()
+        config['phone'] = self.entry1.get()
+        config['pwd'] = self.entry2.get()
+        config['cid'] = self.entry3.get()
 
-        if len(account) != 11:
+        if len(config['phone']) != 11:
             self.logger.error("账号有误")
             return
 
-        if not (account and password):
+        if not (config['phone'] and config['pwd']):
             self.logger.error("输入非法，请检查是否输入为空......")
             return
 
         # 输出日志
-        self.logger.info(f"账号 : {account}")
-        self.logger.warning(f"密码 : {password}")
-        self.logger.error(f"课程cid : {cid}")
+        self.logger.info(f"账号 : {config['phone']}")
+        self.logger.warning(f"密码 : {config['pwd']}")
+        self.logger.error(f"课程cid : {config['cid']}")
 
-        video_task = threading.Thread(target=main, args=("win", account, password, cid))
+        video_task = threading.Thread(target=main, args=("win", config['phone'], config['pwd'], config['cid']))
         video_task.start()
-
-        # 清空输入框
-        # self.entry1.delete(0, "end")
-        # self.entry2.delete(0, "end")
-        # self.entry3.delete(0, "end")
 
 
 class GUITextHandler(logging.Handler):
