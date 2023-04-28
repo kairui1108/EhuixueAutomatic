@@ -25,14 +25,14 @@ class PostMan:
         self.cookie = cookie
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
-            'accept': '*/*',
-            'Cookie': cookie
+            'accept': '*/*'
         }
+        self.session = requests.session()
 
     def get_mock(self, eid, seid):
         base_url = 'https://www.ehuixue.cn/index/study/quizscore.html?'
         url = base_url + 'eid=' + str(eid) + '&' + 'seid=' + str(seid)
-        doc = pq(requests.get(url, headers=self.headers).text)
+        doc = pq(self.session.get(url, headers=self.headers, cookies=self.cookie).text)
         mock = {}
 
         score = doc('div.score')
@@ -87,13 +87,12 @@ class PostMan:
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
             'accept': '*/*',
-            'Cookie': self.cookie,
             'origin': 'https://www.ehuixue.cn',
             'referer': 'https://www.ehuixue.cn/index/study/quizscore.html?eid=' + str(eid) + '&seid=' + str(seid),
             'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
         }
         # print(data)
-        resp = requests.post(url, data=data, headers=headers)
+        resp = self.session.post(url, data=data, headers=headers, cookies=self.cookie)
         # print(resp.status_code)
         logging.info(resp.text)
 
@@ -152,9 +151,10 @@ class PostMan:
 
 
 if __name__ == '__main__':
-    with open('config.yaml', encoding='utf-8') as f:
-        config = yaml.safe_load(f)
-    cookie = config['user']['pioneer_cookie']
-    postman = PostMan(cookie, 'pioneer')
+    # with open('config.yaml', encoding='utf-8') as f:
+    #     config = yaml.safe_load(f)
+    # cookie = config['user']['pioneer_cookie']
+    # postman = PostMan(cookie, 'pioneer')
     # postman.finish_all_work_with_mock()
-    postman.finish_all_work_with_right_answer()
+    # postman.finish_all_work_with_right_answer()
+    pass
