@@ -15,7 +15,7 @@ class SaveMap:
     db = None
 
     def __init__(self):
-        with open('config.yaml') as f:
+        with open('../../config.yaml') as f:
             config = yaml.safe_load(f)
         self.host = config['database']['host']
         self.user = config['database']['user']

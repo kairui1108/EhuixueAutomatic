@@ -5,7 +5,7 @@ import time
 
 from src.exercises import finishWork, saveInfo
 from src.exercises.logUtil import log as logging
-import requests
+from .keeper import status
 from pyquery import PyQuery as pq
 import yaml
 
@@ -15,22 +15,20 @@ import yaml
 
 
 class Paser:
-    cookie = None
     headers = None
     base_url = 'https://www.ehuixue.cn/index/study/quizscore.html?'
     undo_list = []
 
-    def __init__(self, cookie):
-        self.cookie = cookie
+    def __init__(self):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
             'accept': '*/*'
         }
-        self.session = requests.session()
+        self.session = status['session']
 
     def is_done(self, eid, seid):
         url = self.base_url + 'eid=' + str(eid) + '&' + 'seid=' + str(seid)
-        doc = pq(self.session.get(url, headers=self.headers, cookies=self.cookie).text)
+        doc = pq(self.session.get(url, headers=self.headers).text)
         score = doc('div.score')
         noscore = doc('div.noscore')
         if len(score) > 0 or len(noscore) > 0:
@@ -39,13 +37,13 @@ class Paser:
 
     def get_ans(self, eid, seid):
         url = self.base_url + 'eid=' + str(eid) + '&' + 'seid=' + str(seid)
-        doc = pq(self.session.get(url, headers=self.headers, cookies=self.cookie).text)
+        doc = pq(self.session.get(url, headers=self.headers).text)
         post_body = {}
         score = doc('div.score')
         if not score:
             # 未作答
             logging.info("eid为" + str(eid) + "的试题未作答, 开始作答...")
-            postman = finishWork.PostMan(self.cookie)
+            postman = finishWork.PostMan()
             postman.finish_single_work_with_mock(eid, seid)
             # 平台限制，作答完后台批改答案需要一定时间，不能第一时间获取答案
             # return self.get_ans(eid, seid)
@@ -120,6 +118,5 @@ class Paser:
 if __name__ == '__main__':
     with open('../../config.yaml') as f:
         config = yaml.safe_load(f)
-    cookie = config['user']['pioneer_cookie']
-    parser = Paser(cookie)
+    parser = Paser()
     parser.ans_spider()

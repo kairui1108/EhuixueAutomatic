@@ -1,5 +1,4 @@
-import requests
-
+from .keeper import status
 '''
 获取seid
 '''
@@ -7,29 +6,25 @@ import requests
 
 class Getter:
     base_url = "https://www.ehuixue.cn/index/study/joinquiz?eid="
-    headers = ""
 
-    def __init__(self, cookie):
-        self.cookie = cookie
+    def __init__(self):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
             'accept': '*/*'
         }
-        self.session = requests.session()
-        self.cookie = cookie
+        self.session = status["session"]
 
     def get_by_eid(self, eid):
         url = self.base_url + str(eid)
         try:
-            self.session.get(url=url, headers=self.headers, cookies=self.cookie)
-            r = requests.get(url, headers=self.headers)
+            r = self.session.get(url=url, headers=self.headers)
+            print(r.json())
             return r.json().get('data').get('seid')
         except:
             return None
 
 
 if __name__ == '__main__':
-    cookie = ''
-    getter = Getter(cookie)
+    getter = Getter()
     eid = 292251
     print(getter.get_by_eid(eid))

@@ -1,12 +1,10 @@
 import json
-import yaml
-
+from .keeper import status
 from src.exercises import saveInfo, parseQuiz
 from src.exercises.logUtil import log as logging
 import random
 import re
 import time
-import requests
 from pyquery import PyQuery as pq
 
 
@@ -16,23 +14,21 @@ from pyquery import PyQuery as pq
 
 
 class PostMan:
-    cookie = None
     headers = None
     user_name = None
 
-    def __init__(self, cookie, user_name):
+    def __init__(self, user_name):
         self.user_name = user_name
-        self.cookie = cookie
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
             'accept': '*/*'
         }
-        self.session = requests.session()
+        self.session = status['session']
 
     def get_mock(self, eid, seid):
         base_url = 'https://www.ehuixue.cn/index/study/quizscore.html?'
         url = base_url + 'eid=' + str(eid) + '&' + 'seid=' + str(seid)
-        doc = pq(self.session.get(url, headers=self.headers, cookies=self.cookie).text)
+        doc = pq(self.session.get(url, headers=self.headers).text)
         mock = {}
 
         score = doc('div.score')
@@ -92,7 +88,7 @@ class PostMan:
             'content-type': 'application/x-www-form-urlencoded;charset=UTF-8'
         }
         # print(data)
-        resp = self.session.post(url, data=data, headers=headers, cookies=self.cookie)
+        resp = self.session.post(url, data=data, headers=headers)
         # print(resp.status_code)
         logging.info(resp.text)
 
@@ -132,7 +128,7 @@ class PostMan:
             eid = item[1]
             seid = item[2]
             # 判断是否已经作答过
-            if parseQuiz.Paser(self.cookie).is_done(eid, seid):
+            if parseQuiz.Paser().is_done(eid, seid):
                 logging.info(str(eid) + "已经作答过了...")
                 # 可持续发展，防止黑ip
                 time.sleep(6)
