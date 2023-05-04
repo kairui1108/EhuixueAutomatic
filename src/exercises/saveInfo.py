@@ -1,53 +1,51 @@
 from src.exercises.logUtil import log as logging
-
-import pymysql
-import yaml
+import sqlite3
 
 
 class SaveMap:
-    host = None
-    user = None
-    password = None
-    port = 3306
-    database = 'ehx'
-    map_table_name = 'user_work_map'
-    ans_table_name = 'ans_tb'
-    db = None
 
     def __init__(self):
-        with open('../../config.yaml') as f:
-            config = yaml.safe_load(f)
-        self.host = config['database']['host']
-        self.user = config['database']['user']
-        self.password = config['database']['password']
-        self.port = config['database']['port']
-        self.database = config['database']['database']
-        self.db = pymysql.connect(host=self.host, user=self.user, password=self.password, port=self.port,
-                                  db=self.database)
+        self.db = sqlite3.connect('ehx.db')
+        self.map_table_name = "user_work_map"
+        self.ans_table_name = "ans_tb"
+        self.create_map_table()
+        self.create_ans_table()
+
+    def create_map_table(self):
+        c = self.db.cursor()
+        c.execute('CREATE TABLE IF NOT EXISTS {} (id INTEGER PRIMARY KEY, user TEXT, eid INTEGER, seid INTEGER)'.format(
+            self.map_table_name))
+        self.db.commit()
+
+    def create_ans_table(self):
+        c = self.db.cursor()
+        c.execute(
+            'CREATE TABLE IF NOT EXISTS {} (id INTEGER PRIMARY KEY, eid INTEGER, ans TEXT)'.format(self.ans_table_name))
+        self.db.commit()
 
     def select(self, user):
-        select_sql = "select * from user_work_map where user = '" + str(user) + "'"
+        select_sql = "select * from {} where user = ?".format(self.map_table_name)
         cursor = self.db.cursor()
-        cursor.execute(select_sql)
+        cursor.execute(select_sql, (user, ))
         return cursor.fetchall()
 
     def select_ans_by_eid(self, eid):
-        select_sql = 'select * from ans_tb where eid = ' + str(eid)
+        select_sql = 'select * from {} where eid = '.format(self.ans_table_name)
         cursor = self.db.cursor()
-        cursor.execute(select_sql)
+        cursor.execute(select_sql, (eid, ))
         return cursor.fetchone()
 
     def is_in(self, user, eid):
-        select_sql = "select * from user_work_map where eid = " + str(eid) + " and user = '" + str(user) + "'"
+        select_sql = "SELECT * FROM {} WHERE eid = ? AND user = ?".format(self.map_table_name)
         cursor = self.db.cursor()
-        cursor.execute(select_sql)
+        cursor.execute(select_sql, (eid, user))
         return True if len(cursor.fetchall()) > 0 else False
 
     def insert(self, user, eid, seid):
-        insert_sql = 'insert into user_work_map(user, eid, seid) values(%s, %s, %s)'
+        insert_sql = "INSERT INTO {} (user, eid, seid) VALUES (?, ?, ?)".format(self.map_table_name)
         cursor = self.db.cursor()
         try:
-            cursor.execute(insert_sql, (user, str(eid), str(seid)))
+            cursor.execute(insert_sql, (user, eid, seid))
             self.db.commit()
             return True
         except:
@@ -55,17 +53,17 @@ class SaveMap:
             return False
 
     def ans_is_in(self, eid):
-        select_sql = "select * from ans_tb where eid = " + str(eid)
+        select_sql = "SELECT * FROM {} WHERE eid = ?".format(self.ans_table_name)
         cursor = self.db.cursor()
-        cursor.execute(select_sql)
+        cursor.execute(select_sql, (eid,))
         return True if len(cursor.fetchall()) > 0 else False
 
     def insert_ans(self, eid, ans_json):
         logging.info("saving " + str(ans_json))
-        insert_sql = 'insert into ans_tb(eid, ans) values(%s, %s)'
+        insert_sql = "INSERT INTO {} (eid, ans) VALUES (?, ?)".format(self.ans_table_name)
         cursor = self.db.cursor()
         try:
-            cursor.execute(insert_sql, (str(eid), str(ans_json)))
+            cursor.execute(insert_sql, (eid, ans_json))
             self.db.commit()
             return True
         except:
