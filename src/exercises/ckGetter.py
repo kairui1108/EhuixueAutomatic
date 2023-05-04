@@ -1,7 +1,7 @@
 import logging
 
 import requests
-import yaml
+from .config import config
 from .keeper import status
 
 
@@ -9,15 +9,12 @@ class CkGetter:
 
     def __init__(self):
         self.session = requests.session()
-        self.config = None
+        self.config = config
 
-    def get_account(self, name, config):
-        with open(config, encoding='utf-8') as f:
-            config = yaml.safe_load(f)
-            self.config = config
-        uname = config[name]['name']
-        pwd = config[name]['pwd']
-        return uname, pwd
+    def get_account(self, name):
+        phone = config[name]['phone']
+        password = config[name]['pwd']
+        return phone, password
 
     def post_login(self, name, pwd):
         login_url = "https://www.ehuixue.cn/index/login/checklogin"
@@ -55,7 +52,8 @@ class CkGetter:
 
 if __name__ == '__main__':
     getter = CkGetter()
-    uname, pwd = getter.get_account("todo_user", "../../config.yaml")
+    uname = config["pioneer"]['phone']
+    pwd = config["pioneer"]['pwd']
     ck = getter.post_login(uname, pwd)
     print(ck)
     getter.get_study_course(ck)

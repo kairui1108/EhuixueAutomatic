@@ -2,12 +2,10 @@ import json
 import random
 import re
 import time
-
 from src.exercises import finishWork, saveInfo
 from src.exercises.logUtil import log as logging
 from .keeper import status
 from pyquery import PyQuery as pq
-import yaml
 
 '''
 负责解析考试页面，获取正确答案，并保存于数据库
@@ -116,7 +114,5 @@ class Paser:
 
 
 if __name__ == '__main__':
-    with open('../../config.yaml') as f:
-        config = yaml.safe_load(f)
     parser = Paser()
     parser.ans_spider()

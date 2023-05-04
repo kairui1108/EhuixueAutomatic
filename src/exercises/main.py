@@ -1,14 +1,11 @@
 import random
 from src.exercises import saveInfo, getSeid, finishWork, parseQuiz, ckGetter
+from src.exercises.config import config
 from src.exercises.logUtil import log as logging
 import time
-import yaml
 
 
-def save_map(file, name):
-    with open(file, encoding='utf-8') as f:
-        config = yaml.safe_load(f)
-        config = config
+def save_map(name):
     start_eid = config['exercise']['start_eid']
     end_eid = config['exercise']['end_eid']
     client = saveInfo.SaveMap()
@@ -37,25 +34,25 @@ def save_map(file, name):
         time.sleep(13)
 
 
-def pioneer_get_map(config):
+def pioneer_get_map():
     ck_getter = ckGetter.CkGetter()
-    name, pwd = ck_getter.get_account('pioneer', config)
+    name, pwd = ck_getter.get_account('pioneer')
     ck_getter.post_login(name, pwd)
-    save_map(config, "pioneer")
+    save_map("pioneer")
     return ck_getter.session.cookies
 
 
-def todo_get_map(config):
+def todo_get_map():
     ck_getter = ckGetter.CkGetter()
-    name, pwd = ck_getter.get_account('todo_user', config)
+    name, pwd = ck_getter.get_account('todo_user')
     ck_getter.post_login(name, pwd)
-    save_map(config, "todo_user")
+    save_map("todo_user")
     return ck_getter.session.cookies, str(name)
 
 
-def main(config):
+def main():
     logging.info("开始获取未完成试题...")
-    pioneer_ck = pioneer_get_map(config)
+    pioneer_ck = pioneer_get_map()
 
     logging.info("开始准备正确答案...")
     pioneer_postman = finishWork.PostMan('pioneer')
@@ -65,7 +62,7 @@ def main(config):
     logging.info("答案准备完成...")
     #
     logging.info("开始作答...")
-    todo_ck, todo_name = todo_get_map(config)
+    todo_ck, todo_name = todo_get_map()
     todo_postman = finishWork.PostMan(todo_name)
     todo_postman.finish_all_work_with_right_answer()
     logging.info("作答完成...")
@@ -73,4 +70,4 @@ def main(config):
 
 if __name__ == '__main__':
     # 注意config 路径
-    main("../../config.yaml")
+    main()

@@ -147,10 +147,4 @@ class PostMan:
 
 
 if __name__ == '__main__':
-    # with open('config.yaml', encoding='utf-8') as f:
-    #     config = yaml.safe_load(f)
-    # cookie = config['user']['pioneer_cookie']
-    # postman = PostMan(cookie, 'pioneer')
-    # postman.finish_all_work_with_mock()
-    # postman.finish_all_work_with_right_answer()
     pass
