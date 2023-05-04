@@ -1,3 +1,5 @@
+import logging
+
 import requests
 import yaml
 from .keeper import status
@@ -34,6 +36,7 @@ class CkGetter:
         }
         res = self.session.post(url=login_url, headers=header, data=body)
         if res.status_code == 200:
+            logging.info("模拟登录成功")
             status["session"] = self.session
             return self.session
         else:

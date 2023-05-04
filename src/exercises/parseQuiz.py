@@ -43,7 +43,7 @@ class Paser:
         if not score:
             # 未作答
             logging.info("eid为" + str(eid) + "的试题未作答, 开始作答...")
-            postman = finishWork.PostMan()
+            postman = finishWork.PostMan("pioneer")
             postman.finish_single_work_with_mock(eid, seid)
             # 平台限制，作答完后台批改答案需要一定时间，不能第一时间获取答案
             # return self.get_ans(eid, seid)
@@ -101,8 +101,8 @@ class Paser:
     def ans_spider(self):
         client = saveInfo.SaveMap()
         for item in client.select('pioneer'):
-            eid = item[1]
-            seid = item[2]
+            eid = item[2]
+            seid = item[3]
             self.save_ans_into_db(client, eid, seid)
         if len(self.undo_list) > 0:
             logging.info("等待网站后台批改答案后重试获取试题答案...")

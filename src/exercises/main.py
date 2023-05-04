@@ -50,13 +50,12 @@ def todo_get_map(config):
     name, pwd = ck_getter.get_account('todo_user', config)
     ck_getter.post_login(name, pwd)
     save_map(config, "todo_user")
-    return ck_getter.session.cookies, name
+    return ck_getter.session.cookies, str(name)
 
 
 def main(config):
     logging.info("开始获取未完成试题...")
     pioneer_ck = pioneer_get_map(config)
-    # todo_ck, todo_name = todo_get_map(config)
 
     logging.info("开始准备正确答案...")
     pioneer_postman = finishWork.PostMan('pioneer')
@@ -65,10 +64,11 @@ def main(config):
     parser.ans_spider()
     logging.info("答案准备完成...")
     #
-    # logging.info("开始作答...")
-    # todo_postman = finishWork.PostMan(todo_name)
-    # todo_postman.finish_all_work_with_right_answer()
-    # logging.info("作答完成...")
+    logging.info("开始作答...")
+    todo_ck, todo_name = todo_get_map(config)
+    todo_postman = finishWork.PostMan(todo_name)
+    todo_postman.finish_all_work_with_right_answer()
+    logging.info("作答完成...")
 
 
 if __name__ == '__main__':
