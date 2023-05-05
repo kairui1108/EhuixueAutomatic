@@ -11,4 +11,4 @@ setup(name="app",
       description="Description of my program",
       options={"build_exe": build_exe_options},
       install_requires=['rich'],
-      executables=[Executable("src/exercises/gui.py", base=None)])
+      executables=[Executable("src/exercises/gui.py", base=base)])

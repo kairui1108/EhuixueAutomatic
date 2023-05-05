@@ -8,7 +8,7 @@ base = 'Win32GUI' if sys.platform == 'win32' else None
 
 setup(name="app",
       version="0.1",
-      description="Description of my program",
+      description="e 会学工具箱",
       options={"build_exe": build_exe_options},
       install_requires=['rich'],
-      executables=[Executable("MainAppGui.py", base=None)])
+      executables=[Executable("MainAppGui.py", base=base)])

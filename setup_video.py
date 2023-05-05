@@ -11,4 +11,4 @@ setup(name="video",
       description="Description of my program",
       options={"build_exe": build_exe_options},
       install_requires=['rich'],
-      executables=[Executable("src/videos/AppGui.py", base=None)])
+      executables=[Executable("src/videos/AppGui.py", base=base)])
