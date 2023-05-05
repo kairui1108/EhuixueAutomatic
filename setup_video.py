@@ -3,7 +3,8 @@ from cx_Freeze import setup, Executable
 
 build_exe_options = {"packages": ["base64", "json", "time", "requests", "selenium", "logging"],
                      "include_files": ["chromedriver"]}
-# 打包可能缺依赖
+
+base = 'Win32GUI' if sys.platform == 'win32' else None
 
 setup(name="video",
       version="0.1",

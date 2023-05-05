@@ -3,7 +3,8 @@ from cx_Freeze import setup, Executable
 
 build_exe_options = {"packages": ["base64", "json", "time", "requests", "selenium", "logging", "sqlite3"],
                      "include_files": ["chromedriver"]}
-# 打包可能缺依赖
+
+base = 'Win32GUI' if sys.platform == 'win32' else None
 
 setup(name="app",
       version="0.1",

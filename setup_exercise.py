@@ -3,7 +3,8 @@ from cx_Freeze import setup, Executable
 
 build_exe_options = {"packages": ["base64", "json", "time", "requests", "logging", "sqlite3"]
 }
-# 打包可能缺依赖
+
+base = 'Win32GUI' if sys.platform == 'win32' else None
 
 setup(name="app",
       version="0.1",
