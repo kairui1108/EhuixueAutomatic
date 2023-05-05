@@ -6,25 +6,39 @@ from tkinter import ttk
 import threading
 
 
-class Application(tk.Tk):
-    def __init__(self):
-        super().__init__()
+class VideoApplication(tk.Frame):
+    def __init__(self, master=None):
+        super().__init__(master)
         self.version = config['version']
         self.author = "ruikai"
 
-        self.title("e会学-杀手" + self.version)
-
         # 创建三个输入框和一个日志输出框
-        self.label1 = ttk.Label(self, text="账号")
-        self.entry1 = ttk.Entry(self)
-        self.label2 = ttk.Label(self, text="密码")
-        self.entry2 = ttk.Entry(self)
-        self.label3 = ttk.Label(self, text="课程cid")
-        self.entry3 = ttk.Entry(self)
-        self.log_text = tk.Text(self, state="disabled", width=50, height=10)
+        input_frame = ttk.LabelFrame(self, text="输入框")
+        input_frame.pack(side="left", padx=10, pady=10, fill="both", expand=True)
+
+        self.label1 = ttk.Label(input_frame, text="账号")
+        self.label1.pack(side="top", padx=10, pady=5)
+        self.entry1 = ttk.Entry(input_frame)
+        self.entry1.pack(side="top", padx=10, pady=5)
+
+        self.label2 = ttk.Label(input_frame, text="密码")
+        self.label2.pack(side="top", padx=10, pady=5)
+        self.entry2 = ttk.Entry(input_frame)
+        self.entry2.pack(side="top", padx=10, pady=5)
+
+        self.label3 = ttk.Label(input_frame, text="课程cid")
+        self.label3.pack(side="top", padx=10, pady=5)
+        self.entry3 = ttk.Entry(input_frame)
+        self.entry3.pack(side="top", padx=10, pady=5)
+
+        log_frame = ttk.LabelFrame(input_frame, text="日志输出")
+        log_frame.pack(side="right", padx=10, pady=10, fill="both", expand=True)
+
+        self.log_text = tk.Text(log_frame, state="disabled", width=50, height=10)
         self.log_text.tag_configure("INFO", foreground="black")
         self.log_text.tag_configure("WARNING", foreground="orange")
         self.log_text.tag_configure("ERROR", foreground="red")
+        self.log_text.pack(side="top", padx=10, pady=5)
 
         # 将控件布局到界面中
         self.label1.pack()
@@ -41,11 +55,19 @@ class Application(tk.Tk):
         self.logger.addHandler(logging.StreamHandler())
         self.logger.addHandler(GUITextHandler(self.log_text))
 
+        src.videos.app.log = self.logger
+
         # 绑定按钮的事件处理函数
         # self.bind("<Return>", self.handle_submit)
         # 添加确认按钮并绑定事件处理函数
-        self.confirm_button = ttk.Button(self, text="开始", command=self.handle_submit)
-        self.confirm_button.pack(side="top", padx=10, pady=5)
+        button_frame = ttk.Frame(log_frame)
+        button_frame.pack(side="bottom", padx=10, pady=10, fill="x")
+
+        self.exit_button = ttk.Button(button_frame, text="退出", command=self.quit)
+        self.exit_button.pack(side="right", padx=10, pady=5)
+        self.confirm_button = ttk.Button(button_frame, text="开始", command=self.handle_submit)
+        self.confirm_button.pack(side="right", padx=10, pady=5)
+        # self.confirm_button.pack(side="top", fill="both", padx=10, pady=5)
 
     def handle_submit(self):
         # 获取输入框中的数据
@@ -62,11 +84,11 @@ class Application(tk.Tk):
             return
 
         # 输出日志
-        self.logger.info(f"账号 : {config['phone']}")
-        self.logger.warning(f"密码 : {config['pwd']}")
-        self.logger.error(f"课程cid : {config['cid']}")
+        # self.logger.info(f"账号 : {config['phone']}")
+        # self.logger.warning(f"密码 : {config['pwd']}")
+        # self.logger.error(f"课程cid : {config['cid']}")
 
-        video_task = threading.Thread(target=main, args=("win", config['phone'], config['pwd'], config['cid']))
+        video_task = threading.Thread(target=src.videos.app.main, args=("win", config['phone'], config['pwd'], config['cid']))
         video_task.start()
 
 
@@ -83,6 +105,7 @@ class GUITextHandler(logging.Handler):
 
 
 if __name__ == "__main__":
-    app = Application()
-    src.videos.app.logging = app.logger
+    root = tk.Tk()
+    app = VideoApplication(master=root)
+    app.pack()
     app.mainloop()

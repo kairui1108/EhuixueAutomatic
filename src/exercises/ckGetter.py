@@ -1,9 +1,6 @@
-import logging
-
 import requests
 from .config import config
 from .keeper import status
-
 
 class CkGetter:
 
@@ -16,7 +13,7 @@ class CkGetter:
         password = config[name]['pwd']
         return phone, password
 
-    def post_login(self, name, pwd):
+    def post_login(self, name, pwd, logging):
         login_url = "https://www.ehuixue.cn/index/login/checklogin"
         header = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
@@ -32,12 +29,15 @@ class CkGetter:
             'cancelflag': 0
         }
         res = self.session.post(url=login_url, headers=header, data=body)
-        if res.status_code == 200:
+
+        r = res.json()
+        if r['status'] == 100:
             logging.info("模拟登录成功")
             status["session"] = self.session
             return self.session
         else:
-            raise Exception("登录失败,未知错误")
+            logging.error(r['msg'])
+            raise Exception("登录失败")
 
     def get_study_course(self, cookie):
         url = "https://www.ehuixue.cn/index/Personal/getstudycourse"

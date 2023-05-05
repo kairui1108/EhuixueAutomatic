@@ -12,7 +12,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-logging = None
+
+log = None
 
 
 def init_browser_on_window():
@@ -87,15 +88,15 @@ def login(browser, phone, pwd):
     try:
         element_present = EC.presence_of_element_located((By.NAME, "layui-layer-iframe100001"))
         WebDriverWait(browser, 120).until_not(element_present)
-        logging.info("登录成功")
+        log.info("登录成功")
     except TimeoutException:
-        logging.error("登录超时，2min内没有成功登录，请检查是否需要手动登录一次")
+        log.error("登录超时，2min内没有成功登录，请检查是否需要手动登录一次")
 
 
 def get_captcha_code(browser):
     captcha_element = browser.find_element(By.ID, 'verifyimg1')
     captcha_url = captcha_element.get_attribute('src')
-    # logging.debug(captcha_url)
+    # log.debug(captcha_url)
 
     ck = get_ck(browser)
     return get_code(captcha_url, ck)
@@ -113,7 +114,7 @@ def get_code(captcha_url, ck):
     #     f.write(captcha_data)
     uname, pwd = get_api_info()
     result = base64_api(uname=uname, pwd=pwd, captcha_data=captcha_data, typeid=1)
-    logging.info("识别到验证码为：" + result)
+    log.info("识别到验证码为：" + result)
     return result
 
 
@@ -131,7 +132,7 @@ def get_ck(browser):
         name = ck_dict['name']
         value = ck_dict['value']
         ck = ck + str(name) + "=" + str(value) + ";"
-    # logging.info(ck)
+    # log.info(ck)
     return ck
 
 
@@ -149,7 +150,7 @@ def play(browser):
     time.sleep(3)
     video = browser.find_element(By.CSS_SELECTOR, '#playercontainer > div.jw-media.jw-reset > video')
     video_duration = browser.execute_script("return arguments[0].duration", video)
-    logging.info("待播放视频时长" + str(video_duration) + "s")
+    log.info("待播放视频时长" + str(video_duration) + "s")
 
     # （随机）视频任务点，目前只支持随堂练习，和验证码
     try:
@@ -161,7 +162,7 @@ def play(browser):
         task2.start()
 
     except TimeoutException:
-        logging.info("something error")
+        log.info("something error")
 
     # 等待播放下一节视频按钮出现
     try:
@@ -174,15 +175,15 @@ def play(browser):
         next_btn = browser.find_element(By.CSS_SELECTOR,
                                         "#app > section > main > div.left > div > div.cview > div.studyend > div > button")
         next_btn.click()
-        logging.info("视频播放完成")
+        log.info("视频播放完成")
     except NoSuchElementException:
-        logging.info("没有找到下一节按钮，也许已经刷完了")
+        log.info("没有找到下一节按钮，也许已经刷完了")
         # 停止脚本
         browser.quit()
         return
 
     time.sleep(5)
-    logging.info("开始播放下一个视频")
+    log.info("开始播放下一个视频")
     # 递归，继续往下刷
     play(browser)
 
@@ -193,13 +194,13 @@ def enter_code(browser, video_duration):
         iframe = EC.presence_of_element_located(
             (By.CSS_SELECTOR, "#layui-layer-iframe100001"))
         WebDriverWait(browser, int(video_duration) + 1).until(iframe)
-        logging.info("检测到验证码,开始识别...")
+        log.info("检测到验证码,开始识别...")
         browser.switch_to.frame('layui-layer-iframe100001')
         get_code_and_confirm(browser)
         browser.switch_to.default_content()
 
     except TimeoutException:
-        logging.info("没有验证码...")
+        log.info("没有验证码...")
 
 
 def get_code_and_confirm(browser):
@@ -221,9 +222,9 @@ def finish_work(browser, video_duration):
         time.sleep(2)
         close_btn = browser.find_element(By.CSS_SELECTOR, "span.layui-layer-setwin > a")
         close_btn.click()
-        logging.info("已完成随堂练习")
+        log.info("已完成随堂练习")
     except TimeoutException:
-        logging.info("没有随堂练习...")
+        log.info("没有随堂练习...")
 
 
 def main(env, phone, pwd, cid):
@@ -234,7 +235,7 @@ def main(env, phone, pwd, cid):
     elif env == "win-no-head":
         browser = init_browser_on_window_with_no_head()
     else:
-        logging.error("请选择环境: centos 或 win")
+        log.error("请选择环境: centos 或 win")
         return
     phone = config['phone']
     pwd = config['pwd']
@@ -260,5 +261,6 @@ if __name__ == '__main__':
     # 注意config.yaml 路径
     # 环境类型： win centos win-no-head
     # phone 账号  pwd 密码   cid 需要刷的课程的cid
-    # from src.exercises.logUtil import log as logging
+    from src.exercises.logUtil import logging as logging
+    log = logging
     main(env="win", phone="1621*******", pwd="1234", cid=39271)
