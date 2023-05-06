@@ -13,4 +13,4 @@ logging.basicConfig(
     handlers=[RichHandler(rich_tracebacks=True)]
 )
 
-log = logging.getLogger('rich')
+loger = logging.getLogger('rich')

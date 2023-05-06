@@ -9,7 +9,7 @@ log = None
 def save_map(name):
     start_eid = config['exercise']['start_eid']
     end_eid = config['exercise']['end_eid']
-    client = saveInfo.SaveMap()
+    client = saveInfo.Client()
     get_er = getSeid.Getter()
     sleep_time = 10
     for eid in range(int(start_eid), int(end_eid) + 1):
@@ -27,10 +27,10 @@ def save_map(name):
             log.info(f"获取{name} {eid} 的seid失败, 也许已经完成了...")
             sleep_time = 10
             continue
-        log.debug(seid)
+        # log.debug(seid)
         # time.sleep(5)
         result = client.insert(name, eid, seid)
-        log.info("保存" + str(seid) + "结果：" + str(result))
+        log.info("保存" + str(eid) + "--" + str(seid) + "结果：" + str(result))
         sleep_time = random.uniform(60, 120)
         time.sleep(13)
 
@@ -69,8 +69,10 @@ def get_ans():
     log.info("开始获取未完成试题...")
     pioneer_get_map()
     log.info("开始准备正确答案...")
+    finishWork.log = log
     pioneer_postman = finishWork.PostMan('pioneer')
     pioneer_postman.finish_all_work_with_mock()
+    parseQuiz.log = log
     parser = parseQuiz.Paser()
     parser.ans_spider()
     log.info("答案准备完成...")
@@ -79,6 +81,5 @@ def get_ans():
 if __name__ == '__main__':
     from src.exercises.logUtil import log as logging
     log = logging
-    finishWork.log = logging
     # 注意config 路径
     main()
