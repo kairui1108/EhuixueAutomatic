@@ -15,5 +15,6 @@ config = {
     "api": {
         "uname": "name",
         "pwd": "pwd"
-    }
+    },
+    "cid": "39215"
 }
