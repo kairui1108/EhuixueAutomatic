@@ -1,7 +1,12 @@
+import ast
 import tkinter as tk
+from tkinter import ttk
 from threading import Thread
 
 import src.exercises.main
+from src.exercises.saveInfo import Client
+from src.exercises.ckGetter import CkGetter
+from src.exercises.helper import Helper
 from src.exercises.main import *
 import logging
 
@@ -17,6 +22,12 @@ class PostmanApplication(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
 
+        self.course_list = ["请先获取在学课程"]
+        self.course_dict = {}
+        self.work_list = []
+        self.work_dict = {}
+        self.is_pioneer_login = False
+        self.combo = None
         self.quit_button = None
         self.clear_button = None
         self.run_button = None
@@ -61,14 +72,18 @@ class PostmanApplication(tk.Frame):
 
         input_frame3 = tk.LabelFrame(input_frame, text="作业信息")
         input_frame3.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
-        tk.Label(input_frame3, text="start_eid:").grid(row=0, column=0, padx=5, pady=5, sticky=tk.E)
-        self.input5 = tk.Entry(input_frame3)
+        tk.Label(input_frame3, text="开始:").grid(row=0, column=0, padx=5, pady=5, sticky=tk.E)
+        self.input5 = ttk.Combobox(input_frame3, values=self.work_list, state='readonly')
         self.input5.grid(row=0, column=1, padx=5, pady=5)
-        self.input5.insert(1, config["exercise"]["start_eid"])
-        tk.Label(input_frame3, text="end_eid:").grid(row=1, column=0, padx=5, pady=5, sticky=tk.E)
-        self.input6 = tk.Entry(input_frame3)
+        tk.Label(input_frame3, text="结束:").grid(row=1, column=0, padx=5, pady=5, sticky=tk.E)
+        self.input6 = ttk.Combobox(input_frame3, values=self.work_list, state='readonly')
         self.input6.grid(row=1, column=1, padx=5, pady=5)
-        self.input6.insert(1, config["exercise"]["end_eid"])
+
+        selected_option = tk.StringVar(value=self.course_list[0])
+        self.combo = ttk.Combobox(input_frame3, values=self.course_list, textvariable=selected_option, state='readonly')
+        self.combo.bind("<<ComboboxSelected>>", self.get_course)
+        tk.Label(input_frame3, text="课程:").grid(row=2, column=0, padx=5, pady=5, sticky=tk.E)
+        self.combo.grid(row=2, column=1, padx=5, pady=5)
 
         input_frame4 = tk.LabelFrame(input_frame, text="验证码api")
         input_frame4.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
@@ -114,8 +129,7 @@ class PostmanApplication(tk.Frame):
     def get_pioneer_ans(self):
         config['pioneer']['phone'] = self.input1.get()
         config['pioneer']['pwd'] = self.input2.get()
-        config['exercise']['start_eid'] = self.input5.get()
-        config['exercise']['end_eid'] = self.input6.get()
+        self.get_eid()
         config['api']['uname'] = self.input7.get()
         config['api']['pwd'] = self.input8.get()
 
@@ -133,6 +147,61 @@ class PostmanApplication(tk.Frame):
         run_task = Thread(target=run_post, args=())
         run_task.start()
 
+    def get_course(self, *args):
+        src.exercises.helper.loger = self.logger
+        option = self.combo.get()
+        if option == "请先获取在学课程":
+            self.get_course_list()
+        else:
+            self.get_course_work()
+
+    def get_course_list(self):
+        if not self.is_pioneer_login:
+            config['pioneer']['phone'] = self.input1.get()
+            config['pioneer']['pwd'] = self.input2.get()
+            CkGetter().post_login(config["pioneer"]["phone"], config["pioneer"]["pwd"], self.logger)
+            self.is_pioneer_login = True
+        helper = Helper()
+        # helper.get_detail()
+        self.course_list = []
+        courses = helper.get_study_course()
+        for course in courses:
+            name = course["coursename"]
+            self.course_list.append(name)
+            self.course_dict[name] = course["cid"]
+        self.combo.configure(values=self.course_list)
+        self.logger.info("获取所有在学课程成功, 请点击选择一门课程")
+
+    def get_course_work(self):
+        course_name = self.combo.get()
+        cid = self.course_dict[course_name]
+        self.logger.info("开始获取{}的作业题".format(course_name))
+        work_cache = Client().get_works(cid)
+        work_list = []
+        if work_cache is not None:
+            work_list = ast.literal_eval(work_cache[3])
+        else:
+            helper = Helper()
+            work_list = helper.get_detail(cid)
+        for work in work_list:
+            work_name = work["name"]
+            work_eid = work["eid"]
+            self.work_list.append(work_name)
+            self.work_dict[work_name] = work_eid
+        self.input5.configure(values=self.work_list)
+        self.input6.configure(values=self.work_list)
+        self.logger.info("获取课程内习题成功, 请点击选择需要完成的作业题")
+
+    def get_eid(self):
+        start_eid = self.work_dict[str(self.input5.get())]
+        end_eid = self.work_dict[str(self.input6.get())]
+        if int(start_eid) > int(end_eid):
+            temp = start_eid
+            start_eid = end_eid
+            end_eid = temp
+        config["exercise"]["start_eid"] = start_eid
+        config["exercise"]["end_eid"] = end_eid
+
 
 class GUITextHandler(logging.Handler):
     def __init__(self, text_widget):
@@ -149,4 +218,5 @@ class GUITextHandler(logging.Handler):
 if __name__ == '__main__':
     root = tk.Tk()
     app = PostmanApplication(master=root)
+    src.exercises.helper.loger = app.logger
     app.mainloop()

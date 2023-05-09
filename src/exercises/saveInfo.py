@@ -91,6 +91,12 @@ class Client:
             self.db.rollback()
             return False
 
+    def get_works(self, cid):
+        query_sql = "SELECT * FROM {} WHERE cid = ?".format(self.work_table_name)
+        cursor = self.db.cursor()
+        cursor.execute(query_sql, (str(cid), ))
+        return cursor.fetchone()
+
 
 if __name__ == '__main__':
     obj = Client()
@@ -98,4 +104,5 @@ if __name__ == '__main__':
     # print(obj.insert("test", 292246, 6822074))
     # print(obj.is_in('test', 292362))
     # print(obj.is_in(292025))
-    print(obj.insert_works("1", "test", "test"))
+    # print(obj.insert_works("1", "test", "test"))
+    print(obj.get_works("39215"))
