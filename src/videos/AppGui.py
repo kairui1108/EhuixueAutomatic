@@ -39,6 +39,17 @@ class VideoApplication(tk.Frame):
         self.entry3.bind("<<ComboboxSelected>>", self.get_course)
         self.entry3.pack(side="top", padx=10, pady=5)
 
+        input_frame2 = tk.LabelFrame(input_frame, text="验证码api（可选）针对有验证码识别的课程")
+        input_frame2.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
+        tk.Label(input_frame2, text="uname").grid(row=2, column=0, padx=5, pady=5, sticky=tk.E)
+        self.input7 = tk.Entry(input_frame2)
+        self.input7.grid(row=2, column=1, padx=5, pady=5)
+        self.input7.insert(1, config["uname"])
+        tk.Label(input_frame2, text="pwd").grid(row=3, column=0, padx=5, pady=5, sticky=tk.E)
+        self.input8 = tk.Entry(input_frame2)
+        self.input8.grid(row=3, column=1, padx=5, pady=5)
+        self.input8.insert(1, config["pwd"])
+
         log_frame = ttk.LabelFrame(input_frame, text="日志输出")
         log_frame.pack(side="right", padx=10, pady=10, fill="both", expand=True)
 

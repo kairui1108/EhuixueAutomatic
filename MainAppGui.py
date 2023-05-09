@@ -9,7 +9,7 @@ if __name__ == '__main__':
 
     root = tk.Tk()
     root.title("e会学工具箱")
-    root.geometry("400x650")
+    root.geometry("400x600")
 
     # 创建 Notebook 控件
     notebook = ttk.Notebook(root)

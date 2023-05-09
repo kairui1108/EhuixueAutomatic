@@ -85,17 +85,6 @@ class PostmanApplication(tk.Frame):
         tk.Label(input_frame3, text="课程:").grid(row=2, column=0, padx=5, pady=5, sticky=tk.E)
         self.combo.grid(row=2, column=1, padx=5, pady=5)
 
-        input_frame4 = tk.LabelFrame(input_frame, text="验证码api")
-        input_frame4.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
-        tk.Label(input_frame4, text="api_name(可选）").grid(row=2, column=0, padx=5, pady=5, sticky=tk.E)
-        self.input7 = tk.Entry(input_frame4)
-        self.input7.grid(row=2, column=1, padx=5, pady=5)
-        self.input7.insert(1, config["api"]["uname"])
-        tk.Label(input_frame4, text="api_pwd(可选）").grid(row=3, column=0, padx=5, pady=5, sticky=tk.E)
-        self.input8 = tk.Entry(input_frame4)
-        self.input8.grid(row=3, column=1, padx=5, pady=5)
-        self.input8.insert(1, config["api"]["pwd"])
-
         # 创建日志输出框
         log_frame = tk.LabelFrame(input_frame, text="日志输出")
         log_frame.pack(side="right", padx=10, pady=10, fill="both", expand=True)
