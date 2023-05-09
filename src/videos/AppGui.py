@@ -48,7 +48,7 @@ class VideoApplication(tk.Frame):
         tk.Label(input_frame2, text="pwd").grid(row=3, column=0, padx=5, pady=5, sticky=tk.E)
         self.input8 = tk.Entry(input_frame2)
         self.input8.grid(row=3, column=1, padx=5, pady=5)
-        self.input8.insert(1, config["pwd"])
+        self.input8.insert(1, config["api_pwd"])
 
         log_frame = ttk.LabelFrame(input_frame, text="日志输出")
         log_frame.pack(side="right", padx=10, pady=10, fill="both", expand=True)

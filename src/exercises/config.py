@@ -1,16 +1,16 @@
 
 config = {
     "pioneer": {
-        "phone": 10086,
-        "pwd": "pwd"
+        "phone": "",
+        "pwd": ""
     },
     "todo_user": {
-        "phone": 119,
-        "pwd": "pwd"
+        "phone": "",
+        "pwd": ""
     },
     "exercise": {
-        "start_eid": 331271,
-        "end_eid": 331275
+        "start_eid": 0,
+        "end_eid": 0
     },
     "api": {
         "uname": "name",
