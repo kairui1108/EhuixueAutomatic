@@ -1,5 +1,7 @@
 import src.videos.app
+from src.exercises.ckGetter import CkGetter
 from src.videos.app import *
+from src.exercises.helper import Helper
 import logging
 import tkinter as tk
 from tkinter import ttk
@@ -9,6 +11,9 @@ import threading
 class VideoApplication(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
+        self.course_dict = {}
+        self.is_login = False
+        self.course_list = ["点击获取在学课程"]
         self.version = config['version']
         self.author = "ruikai"
 
@@ -28,7 +33,10 @@ class VideoApplication(tk.Frame):
 
         self.label3 = ttk.Label(input_frame, text="课程cid")
         self.label3.pack(side="top", padx=10, pady=5)
-        self.entry3 = ttk.Entry(input_frame)
+
+        selected_option = tk.StringVar(value=self.course_list[0])
+        self.entry3 = ttk.Combobox(input_frame, values=self.course_list, textvariable=selected_option, state='readonly')
+        self.entry3.bind("<<ComboboxSelected>>", self.get_course)
         self.entry3.pack(side="top", padx=10, pady=5)
 
         log_frame = ttk.LabelFrame(input_frame, text="日志输出")
@@ -73,23 +81,48 @@ class VideoApplication(tk.Frame):
         # 获取输入框中的数据
         config['phone'] = self.entry1.get()
         config['pwd'] = self.entry2.get()
-        config['cid'] = self.entry3.get()
 
-        if len(config['phone']) != 11:
-            self.logger.error("账号有误")
+        if not self.valid():
             return
 
-        if not (config['phone'] and config['pwd']):
-            self.logger.error("输入非法，请检查是否输入为空......")
-            return
-
-        # 输出日志
-        # self.logger.info(f"账号 : {config['phone']}")
-        # self.logger.warning(f"密码 : {config['pwd']}")
-        # self.logger.error(f"课程cid : {config['cid']}")
+        if config['cid'] == 0:
+            self.logger.error("请选择一门课程")
 
         video_task = threading.Thread(target=src.videos.app.main, args=("win", config['phone'], config['pwd'], config['cid']))
         video_task.start()
+
+    def valid(self):
+        if len(config['phone']) != 11:
+            self.logger.error("账号有误")
+            return False
+
+        if not (config['pwd']):
+            self.logger.error("输入非法，请检查密码是否输入为空......")
+            return False
+
+        return True
+
+    def get_course(self, event):
+        option = self.entry3.get()
+        if option != "点击获取在学课程":
+            config["cid"] = self.course_dict[option]
+            return
+        src.exercises.helper.loger = self.logger
+        if not self.is_login:
+            config['phone'] = self.entry1.get()
+            config['pwd'] = self.entry2.get()
+            if not self.valid():
+                return
+            CkGetter().post_login(config["phone"], config["pwd"], self.logger)
+            self.is_login = True
+        self.course_list = []
+        courses = Helper().get_study_course()
+        for course in courses:
+            name = course["coursename"]
+            self.course_list.append(name)
+            self.course_dict[name] = course["cid"]
+        self.entry3.configure(values=self.course_list)
+        self.logger.info("获取所有在学课程成功, 请点击选择一门课程")
 
 
 class GUITextHandler(logging.Handler):

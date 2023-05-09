@@ -22,7 +22,7 @@ class PostmanApplication(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
 
-        self.course_list = ["请先获取在学课程"]
+        self.course_list = ["点击获取在学课程"]
         self.course_dict = {}
         self.work_list = []
         self.work_dict = {}
@@ -150,7 +150,7 @@ class PostmanApplication(tk.Frame):
     def get_course(self, *args):
         src.exercises.helper.loger = self.logger
         option = self.combo.get()
-        if option == "请先获取在学课程":
+        if option == "点击获取在学课程":
             self.get_course_list()
         else:
             self.get_course_work()
