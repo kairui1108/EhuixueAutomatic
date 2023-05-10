@@ -31,7 +31,7 @@ class VideoApplication(tk.Frame):
         self.entry2 = ttk.Entry(input_frame)
         self.entry2.pack(side="top", padx=10, pady=5)
 
-        self.label3 = ttk.Label(input_frame, text="课程cid")
+        self.label3 = ttk.Label(input_frame, text="课程")
         self.label3.pack(side="top", padx=10, pady=5)
 
         selected_option = tk.StringVar(value=self.course_list[0])

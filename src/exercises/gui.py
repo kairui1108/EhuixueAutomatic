@@ -37,8 +37,6 @@ class PostmanApplication(tk.Frame):
         self.input4 = None
         self.input5 = None
         self.input6 = None
-        self.input7 = None
-        self.input8 = None
         self.master = master
         self.create_widgets()
 
@@ -119,8 +117,6 @@ class PostmanApplication(tk.Frame):
         config['pioneer']['phone'] = self.input1.get()
         config['pioneer']['pwd'] = self.input2.get()
         self.get_eid()
-        config['api']['uname'] = self.input7.get()
-        config['api']['pwd'] = self.input8.get()
 
         if is_any_blank(config['pioneer']['phone'], config['pioneer']['pwd'], config['exercise']['start_eid'], config['exercise']['end_eid']):
             self.logger.error("请检查参数，是否输入正确")
@@ -165,6 +161,7 @@ class PostmanApplication(tk.Frame):
         course_name = self.combo.get()
         cid = self.course_dict[course_name]
         self.logger.info("开始获取{}的作业题".format(course_name))
+        self.work_list = []
         work_cache = Client().get_works(cid)
         work_list = []
         if work_cache is not None:
@@ -179,7 +176,7 @@ class PostmanApplication(tk.Frame):
             self.work_dict[work_name] = work_eid
         self.input5.configure(values=self.work_list)
         self.input6.configure(values=self.work_list)
-        self.logger.info("获取课程内习题成功, 请点击选择需要完成的作业题")
+        self.logger.info("获取课程{}习题成功, 请点击选择需要完成的作业题".format(course_name))
 
     def get_eid(self):
         start_eid = self.work_dict[str(self.input5.get())]
