@@ -36,10 +36,10 @@ jobs:
         python3 setup.py
 
     - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: MainAppGui
-          path: dist/MainAppGui.exe
+      uses: actions/upload-artifact@v2
+      with:
+        name: MainAppGui
+        path: dist/MainAppGui.exe
 
 
     - name: Create Release
