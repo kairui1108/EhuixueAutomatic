@@ -51,7 +51,7 @@ class Helper:
                             work_list.append(work)
                             loger.info(str(eid) + " ==> " + name)
 
-            loger.debug(work_list)
+            # loger.debug(work_list)
             if self.client.insert_works(cid, cname, work_list):
                 loger.info("保存作业信息成功")
                 return work_list

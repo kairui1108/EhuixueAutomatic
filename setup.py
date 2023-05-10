@@ -1,14 +1,14 @@
 import sys
-from cx_Freeze import setup, Executable
+from PyInstaller.__main__ import run
 
-build_exe_options = {"packages": ["base64", "json", "time", "requests", "selenium", "logging", "sqlite3"],
-                     "include_files": ["chromedriver"]}
-
-base = 'Win32GUI' if sys.platform == 'win32' else None
-
-setup(name="app",
-      version="0.1",
-      description="e 会学工具箱",
-      options={"build_exe": build_exe_options},
-      install_requires=['rich'],
-      executables=[Executable("MainAppGui.py", base=base)])
+if __name__ == '__main__':
+    sys.setrecursionlimit(5000)
+    opts = ['MainAppGui.py',
+            '-F',
+            '--noconsole',
+            '--add-data', 'chromedriver;.',
+            '--add-data', 'ehuixue.ico;.',
+            '--hidden-import',
+            'pkg_resources.py2_warn',
+            '-i', 'ehuixue.ico']
+    run(opts)
