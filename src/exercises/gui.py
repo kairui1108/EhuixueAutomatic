@@ -46,7 +46,7 @@ class PostmanApplication(tk.Frame):
         input_frame.pack(side=tk.TOP, padx=5, pady=5)
 
         # 创建输入框框架
-        input_frame1 = tk.LabelFrame(input_frame, text="小白鼠信息")
+        input_frame1 = tk.LabelFrame(input_frame, text="小白鼠信息，用于获取正确答案")
         input_frame1.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
         tk.Label(input_frame1, text="phone:").grid(row=0, column=0, padx=5, pady=5, sticky=tk.E)
         self.input1 = tk.Entry(input_frame1)
@@ -57,7 +57,7 @@ class PostmanApplication(tk.Frame):
         self.input2.grid(row=1, column=1, padx=5, pady=5)
         self.input2.insert(1, config["pioneer"]["pwd"])
 
-        input_frame2 = tk.LabelFrame(input_frame, text="todo_user信息")
+        input_frame2 = tk.LabelFrame(input_frame, text="todo_user信息，需要刷题的用户")
         input_frame2.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
         tk.Label(input_frame2, text="phone:").grid(row=0, column=0, padx=5, pady=5, sticky=tk.E)
         self.input3 = tk.Entry(input_frame2)
