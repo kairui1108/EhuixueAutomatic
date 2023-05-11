@@ -1,6 +1,7 @@
-from src.exercises.keeper import status
 from src.exercises.ckGetter import CkGetter
 from src.exercises.saveInfo import Client
+from src.exercises.config import config
+from src.exercises.keeper import status
 
 loger = None
 
@@ -8,10 +9,33 @@ loger = None
 class Helper:
 
     def __init__(self, session_name):
-        self.session = status["session_" + str(session_name)]
+        self.session = None
+        try:
+            self.session = status["session_" + str(session_name)]
+        except:
+            self.session = None
+
+        if self.session is None:
+            self.login(session_name)
+        else:
+            res = self.session.post("https://www.ehuixue.cn/index/Personal/getmsgstatus")
+            text = res.text
+            if '<script>' in text:
+                self.login(session_name)
+
         self.course_detail_url = "https://www.ehuixue.cn/index/study/directdetail"
         self.course_url = "https://www.ehuixue.cn/index/Personal/getstudycourse"
         self.client = Client()
+
+    def login(self, name):
+        if name == 'pioneer':
+            phone = config['pioneer']['phone']
+            pwd = config['pioneer']['pwd']
+        else:
+            phone = config['todo_user']['phone']
+            pwd = config['todo_user']['pwd']
+        CkGetter(phone, pwd, loger).post_login(name)
+        self.session = status["session_" + str(name)]
 
     def get_detail(self, cid):
         data_json = {

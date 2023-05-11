@@ -1,6 +1,7 @@
 import random
 from src.exercises import saveInfo, getSeid, finishWork, parseQuiz, ckGetter
 from src.exercises.config import config
+from src.exercises.helper import Helper
 import time
 
 log = None
@@ -43,18 +44,16 @@ def get_account(name):
 
 def pioneer_get_map():
     name, pwd = get_account('pioneer')
-    ck_getter = ckGetter.CkGetter(name, pwd, log)
-    ck_getter.post_login('pioneer')
+    Helper('pioneer')
     save_map("pioneer")
-    return ck_getter.session.cookies
+    return 'pioneer'
 
 
 def todo_get_map():
     name, pwd = get_account('todo_user')
-    ck_getter = ckGetter.CkGetter(name, pwd, log)
-    ck_getter.post_login(name)
+    Helper(name)
     save_map(name)
-    return ck_getter.session.cookies, str(name)
+    return str(name)
 
 
 def main():
@@ -65,7 +64,7 @@ def main():
 
 def run_post():
     log.info("开始作答...")
-    todo_ck, todo_name = todo_get_map()
+    todo_name = todo_get_map()
     todo_postman = finishWork.PostMan(todo_name)
     todo_postman.finish_all_work_with_right_answer()
     log.info("作答完成...")

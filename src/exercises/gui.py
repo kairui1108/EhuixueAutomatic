@@ -26,7 +26,6 @@ class PostmanApplication(tk.Frame):
         self.course_dict = {}
         self.work_list = []
         self.work_dict = {}
-        self.is_pioneer_login = False
         self.combo = None
         self.quit_button = None
         self.clear_button = None
@@ -141,11 +140,8 @@ class PostmanApplication(tk.Frame):
             self.get_course_work()
 
     def get_course_list(self):
-        if not self.is_pioneer_login:
-            config['pioneer']['phone'] = self.input1.get()
-            config['pioneer']['pwd'] = self.input2.get()
-            CkGetter(config["pioneer"]["phone"], config["pioneer"]["pwd"], self.logger).post_login("pioneer")
-            self.is_pioneer_login = True
+        config['pioneer']['phone'] = self.input1.get()
+        config['pioneer']['pwd'] = self.input2.get()
         helper = Helper('pioneer')
         # helper.get_detail()
         self.course_list = []
