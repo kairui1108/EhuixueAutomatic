@@ -7,8 +7,8 @@ loger = None
 
 class Helper:
 
-    def __init__(self):
-        self.session = status["session"]
+    def __init__(self, session_name):
+        self.session = status["session_" + str(session_name)]
         self.course_detail_url = "https://www.ehuixue.cn/index/study/directdetail"
         self.course_url = "https://www.ehuixue.cn/index/Personal/getstudycourse"
         self.client = Client()
@@ -85,7 +85,4 @@ class Helper:
 if __name__ == "__main__":
     from logUtil import loger as logging
     loger = logging
-    CkGetter().post_login("17198642616", "TANRUIKAI888", loger)
-    helper = Helper()
-    # helper.get_detail()
-    print(helper.get_study_course())
+    pass

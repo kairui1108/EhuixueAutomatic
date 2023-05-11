@@ -23,7 +23,7 @@ class Paser:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
             'accept': '*/*'
         }
-        self.session = status['session']
+        self.session = status['session_pioneer']
 
     def is_done(self, eid, seid):
         url = self.base_url + 'eid=' + str(eid) + '&' + 'seid=' + str(seid)

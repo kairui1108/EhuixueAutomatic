@@ -10,7 +10,7 @@ def save_map(name):
     start_eid = config['exercise']['start_eid']
     end_eid = config['exercise']['end_eid']
     client = saveInfo.Client()
-    get_er = getSeid.Getter()
+    get_er = getSeid.Getter(name)
     sleep_time = 10
     for eid in range(int(start_eid), int(end_eid) + 1):
         if client.is_in(name, eid):
@@ -35,19 +35,25 @@ def save_map(name):
         time.sleep(13)
 
 
+def get_account(name):
+    phone = config[name]['phone']
+    password = config[name]['pwd']
+    return phone, password
+
+
 def pioneer_get_map():
-    ck_getter = ckGetter.CkGetter()
-    name, pwd = ck_getter.get_account('pioneer')
-    ck_getter.post_login(name, pwd, log)
+    name, pwd = get_account('pioneer')
+    ck_getter = ckGetter.CkGetter(name, pwd, log)
+    ck_getter.post_login('pioneer')
     save_map("pioneer")
     return ck_getter.session.cookies
 
 
 def todo_get_map():
-    ck_getter = ckGetter.CkGetter()
-    name, pwd = ck_getter.get_account('todo_user')
-    ck_getter.post_login(name, pwd, log)
-    save_map("todo_user")
+    name, pwd = get_account('todo_user')
+    ck_getter = ckGetter.CkGetter(name, pwd, log)
+    ck_getter.post_login(name)
+    save_map(name)
     return ck_getter.session.cookies, str(name)
 
 

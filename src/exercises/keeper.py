@@ -1,4 +1,4 @@
 
 status = {
-    "session": None
+    "session_pioneer": None
 }

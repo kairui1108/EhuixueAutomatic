@@ -144,9 +144,9 @@ class PostmanApplication(tk.Frame):
         if not self.is_pioneer_login:
             config['pioneer']['phone'] = self.input1.get()
             config['pioneer']['pwd'] = self.input2.get()
-            CkGetter().post_login(config["pioneer"]["phone"], config["pioneer"]["pwd"], self.logger)
+            CkGetter(config["pioneer"]["phone"], config["pioneer"]["pwd"], self.logger).post_login("pioneer")
             self.is_pioneer_login = True
-        helper = Helper()
+        helper = Helper('pioneer')
         # helper.get_detail()
         self.course_list = []
         courses = helper.get_study_course()
@@ -167,7 +167,7 @@ class PostmanApplication(tk.Frame):
         if work_cache is not None:
             work_list = ast.literal_eval(work_cache[3])
         else:
-            helper = Helper()
+            helper = Helper('pioneer')
             work_list = helper.get_detail(cid)
         for work in work_list:
             work_name = work["name"]
