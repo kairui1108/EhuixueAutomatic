@@ -1,4 +1,7 @@
+import time
+
 import src.videos.app
+from src.exercises.config import config as exercise_config
 from src.exercises.ckGetter import CkGetter
 from src.videos.app import *
 from src.exercises.helper import Helper
@@ -12,7 +15,6 @@ class VideoApplication(tk.Frame):
     def __init__(self, master=None):
         super().__init__(master)
         self.course_dict = {}
-        self.is_login = False
         self.course_list = ["点击获取在学课程"]
         self.version = config['version']
         self.author = "ruikai"
@@ -84,23 +86,32 @@ class VideoApplication(tk.Frame):
 
         self.exit_button = ttk.Button(button_frame, text="退出", command=self.quit)
         self.exit_button.pack(side="right", padx=10, pady=5)
-        self.confirm_button = ttk.Button(button_frame, text="开始", command=self.handle_submit)
-        self.confirm_button.pack(side="right", padx=10, pady=5)
+        self.run_button = ttk.Button(button_frame, text="开始", command=self.handle_run)
+        self.run_button.pack(side="right", padx=10, pady=5)
+        self.time_button = ttk.Button(button_frame, text="常用时间", command=self.handle_time)
+        self.time_button.pack(side="right", padx=10, pady=5)
         # self.confirm_button.pack(side="top", fill="both", padx=10, pady=5)
 
-    def handle_submit(self):
+    def handle_run(self):
+        if not self.get_config():
+            return
+
+        if config['cid'] == 0:
+            self.logger.error("请选择一门课程")
+            return
+
+        video_task = threading.Thread(target=src.videos.app.main, args=("win", config['phone'], config['pwd'], config['cid']))
+        video_task.start()
+
+    def get_config(self):
         # 获取输入框中的数据
         config['phone'] = self.entry1.get()
         config['pwd'] = self.entry2.get()
 
         if not self.valid():
-            return
+            return False
 
-        if config['cid'] == 0:
-            self.logger.error("请选择一门课程")
-
-        video_task = threading.Thread(target=src.videos.app.main, args=("win", config['phone'], config['pwd'], config['cid']))
-        video_task.start()
+        return True
 
     def valid(self):
         if len(config['phone']) != 11:
@@ -119,21 +130,31 @@ class VideoApplication(tk.Frame):
             config["cid"] = self.course_dict[option]
             return
         src.exercises.helper.loger = self.logger
-        if not self.is_login:
-            config['phone'] = self.entry1.get()
-            config['pwd'] = self.entry2.get()
-            if not self.valid():
-                return
-            CkGetter().post_login(config["phone"], config["pwd"], self.logger)
-            self.is_login = True
+        config['phone'] = self.entry1.get()
+        config['pwd'] = self.entry2.get()
+        exercise_config['todo_user']['phone'] = self.entry1.get()
+        exercise_config['todo_user']['pwd'] = self.entry2.get()
+
+        if not self.valid():
+            return
         self.course_list = []
-        courses = Helper().get_study_course()
+        courses = Helper(config['phone']).get_study_course()
         for course in courses:
             name = course["coursename"]
             self.course_list.append(name)
             self.course_dict[name] = course["cid"]
         self.entry3.configure(values=self.course_list)
         self.logger.info("获取所有在学课程成功, 请点击选择一门课程")
+
+    def handle_time(self):
+        if not self.get_config():
+            return
+        helper = Helper(config["phone"])
+        helper.get_ban_data(config["cid"])
+        while not helper.is_available(config["cid"]):
+            self.logger.error("当前不在常用时间段内")
+            time.sleep(300)
+        self.handle_run()
 
 
 class GUITextHandler(logging.Handler):

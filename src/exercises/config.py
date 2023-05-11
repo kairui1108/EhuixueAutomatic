@@ -16,5 +16,6 @@ config = {
         "uname": "name",
         "pwd": "pwd"
     },
-    "cid": "39215"
+    "cid": "39215",
+    "time_list": []
 }
