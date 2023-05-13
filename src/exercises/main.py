@@ -1,6 +1,7 @@
 import random
 from src.exercises import saveInfo, getSeid, finishWork, parseQuiz, ckGetter
 from src.exercises.config import config
+from src.exercises.helper import Helper
 import time
 
 log = None
@@ -10,7 +11,7 @@ def save_map(name):
     start_eid = config['exercise']['start_eid']
     end_eid = config['exercise']['end_eid']
     client = saveInfo.Client()
-    get_er = getSeid.Getter()
+    get_er = getSeid.Getter(name)
     sleep_time = 10
     for eid in range(int(start_eid), int(end_eid) + 1):
         if client.is_in(name, eid):
@@ -35,20 +36,24 @@ def save_map(name):
         time.sleep(13)
 
 
+def get_account(name):
+    phone = config[name]['phone']
+    password = config[name]['pwd']
+    return phone, password
+
+
 def pioneer_get_map():
-    ck_getter = ckGetter.CkGetter()
-    name, pwd = ck_getter.get_account('pioneer')
-    ck_getter.post_login(name, pwd, log)
+    name, pwd = get_account('pioneer')
+    Helper('pioneer')
     save_map("pioneer")
-    return ck_getter.session.cookies
+    return 'pioneer'
 
 
 def todo_get_map():
-    ck_getter = ckGetter.CkGetter()
-    name, pwd = ck_getter.get_account('todo_user')
-    ck_getter.post_login(name, pwd, log)
-    save_map("todo_user")
-    return ck_getter.session.cookies, str(name)
+    name, pwd = get_account('todo_user')
+    Helper(name)
+    save_map(name)
+    return str(name)
 
 
 def main():
@@ -59,7 +64,7 @@ def main():
 
 def run_post():
     log.info("开始作答...")
-    todo_ck, todo_name = todo_get_map()
+    todo_name = todo_get_map()
     todo_postman = finishWork.PostMan(todo_name)
     todo_postman.finish_all_work_with_right_answer()
     log.info("作答完成...")

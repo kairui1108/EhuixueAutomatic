@@ -24,7 +24,7 @@ class PostMan:
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
             'accept': '*/*'
         }
-        self.session = status['session']
+        self.session = status['session_' + str(user_name)]
 
     def get_mock(self, eid, seid):
         base_url = 'https://www.ehuixue.cn/index/study/quizscore.html?'

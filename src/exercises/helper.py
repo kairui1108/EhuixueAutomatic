@@ -1,17 +1,43 @@
-from src.exercises.keeper import status
+from datetime import datetime
 from src.exercises.ckGetter import CkGetter
 from src.exercises.saveInfo import Client
+from src.exercises.config import config
+from src.exercises.keeper import status
+import re
 
 loger = None
 
 
 class Helper:
 
-    def __init__(self):
-        self.session = status["session"]
+    def __init__(self, session_name):
+        self.session = None
+        try:
+            self.session = status["session_" + str(session_name)]
+        except:
+            self.session = None
+
+        if self.session is None:
+            self.login(session_name)
+        else:
+            res = self.session.post("https://www.ehuixue.cn/index/Personal/getmsgstatus")
+            text = res.text
+            if '<script>' in text:
+                self.login(session_name)
+
         self.course_detail_url = "https://www.ehuixue.cn/index/study/directdetail"
         self.course_url = "https://www.ehuixue.cn/index/Personal/getstudycourse"
         self.client = Client()
+
+    def login(self, name):
+        if name == 'pioneer':
+            phone = config['pioneer']['phone']
+            pwd = config['pioneer']['pwd']
+        else:
+            phone = config['todo_user']['phone']
+            pwd = config['todo_user']['pwd']
+        CkGetter(phone, pwd, loger).post_login(name)
+        self.session = status["session_" + str(name)]
 
     def get_detail(self, cid):
         data_json = {
@@ -81,11 +107,57 @@ class Helper:
             loger.error("获取课程信息失败")
             return None
 
+    def get_ban_data(self, cid):
+        session = self.session
+        session.post("https://www.ehuixue.cn/index/Personal/getmsgstatus")
+        ban_url = "https://www.ehuixue.cn/index/Personal/getabndata"
+        body = {
+            "p": 1,
+            "limit": 10,
+            "cid": cid,
+            "atype": "",
+            "stime": "",
+            "etime": ""
+        }
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
+            'accept': '*/*',
+            'origin': 'https://www.ehuixue.cn',
+            'referer': 'https://www.ehuixue.cn/index/Personal/myabnormal',
+            'content-type': 'application/json;charset=UTF-8'
+        }
+        try:
+            json = session.post(url=ban_url, json=body, headers=headers).json()
+            info = json['data']['info'][0]
+            course_name = info['coursename']
+            loger.info("课程:  " + course_name)
+            ab_reason = info['abreason']
+            match = re.search(r"常用时间段为【(.+?)】", ab_reason)
+            if match:
+                time_str = match.group(1)
+                time_list = time_str.split(",")
+                loger.info("常用时间段：" + str(time_list))
+                config['time_list'] = time_list
+                return time_list
+            else:
+                loger.info("获取常用时间失败")
+        except:
+            loger.info("尝试获取常用时间失败, 下次重试")
+
+    def is_available(self, cid):
+        time_list = config["time_list"]
+        if len(time_list) == 0:
+            self.get_ban_data(cid)
+            if len(time_list) == 0:
+                return True
+        hour = datetime.now().hour
+        if str(hour) in time_list:
+            return True
+        else:
+            return False
+
 
 if __name__ == "__main__":
     from logUtil import loger as logging
     loger = logging
-    CkGetter().post_login("17198642616", "TANRUIKAI888", loger)
-    helper = Helper()
-    # helper.get_detail()
-    print(helper.get_study_course())
+    pass

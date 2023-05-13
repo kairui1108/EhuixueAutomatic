@@ -5,16 +5,14 @@ from .keeper import status
 
 class CkGetter:
 
-    def __init__(self):
+    def __init__(self, name, pwd, logging):
         self.session = requests.session()
         self.config = config
+        self.name = name
+        self.pwd = pwd
+        self.logging = logging
 
-    def get_account(self, name):
-        phone = config[name]['phone']
-        password = config[name]['pwd']
-        return phone, password
-
-    def post_login(self, name, pwd, logging):
+    def post_login(self, session_name):
         login_url = "https://www.ehuixue.cn/index/login/checklogin"
         header = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
@@ -24,8 +22,8 @@ class CkGetter:
         }
         body = {
             'type': 1,
-            'account': name,
-            'pwd': pwd,
+            'account': self.name,
+            'pwd': self.pwd,
             'code': None,
             'cancelflag': 0
         }
@@ -33,14 +31,14 @@ class CkGetter:
 
         r = res.json()
         if r['status'] == 100:
-            logging.info("模拟登录成功")
-            status["session"] = self.session
+            self.logging.info("模拟登录成功")
+            status["session_" + str(session_name)] = self.session
             return self.session
         else:
-            logging.error(r['msg'])
+            self.logging.error(r['msg'])
             raise Exception("登录失败")
 
-    def get_study_course(self, cookie):
+    def get_study_course(self):
         url = "https://www.ehuixue.cn/index/Personal/getstudycourse"
         data = {
             'type': 1,
@@ -52,9 +50,9 @@ class CkGetter:
 
 
 if __name__ == '__main__':
-    getter = CkGetter()
+    from logUtil import loger
     uname = config["pioneer"]['phone']
     pwd = config["pioneer"]['pwd']
-    ck = getter.post_login(uname, pwd)
-    print(ck)
-    getter.get_study_course(ck)
+    getter = CkGetter(uname, pwd, loger)
+    getter.post_login("pioneer")
+    getter.get_study_course()

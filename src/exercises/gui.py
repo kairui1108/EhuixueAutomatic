@@ -26,7 +26,6 @@ class PostmanApplication(tk.Frame):
         self.course_dict = {}
         self.work_list = []
         self.work_dict = {}
-        self.is_pioneer_login = False
         self.combo = None
         self.quit_button = None
         self.clear_button = None
@@ -46,7 +45,7 @@ class PostmanApplication(tk.Frame):
         input_frame.pack(side=tk.TOP, padx=5, pady=5)
 
         # 创建输入框框架
-        input_frame1 = tk.LabelFrame(input_frame, text="小白鼠信息")
+        input_frame1 = tk.LabelFrame(input_frame, text="小白鼠信息，用于获取正确答案")
         input_frame1.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
         tk.Label(input_frame1, text="phone:").grid(row=0, column=0, padx=5, pady=5, sticky=tk.E)
         self.input1 = tk.Entry(input_frame1)
@@ -57,7 +56,7 @@ class PostmanApplication(tk.Frame):
         self.input2.grid(row=1, column=1, padx=5, pady=5)
         self.input2.insert(1, config["pioneer"]["pwd"])
 
-        input_frame2 = tk.LabelFrame(input_frame, text="todo_user信息")
+        input_frame2 = tk.LabelFrame(input_frame, text="todo_user信息，需要刷题的用户")
         input_frame2.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
         tk.Label(input_frame2, text="phone:").grid(row=0, column=0, padx=5, pady=5, sticky=tk.E)
         self.input3 = tk.Entry(input_frame2)
@@ -141,12 +140,9 @@ class PostmanApplication(tk.Frame):
             self.get_course_work()
 
     def get_course_list(self):
-        if not self.is_pioneer_login:
-            config['pioneer']['phone'] = self.input1.get()
-            config['pioneer']['pwd'] = self.input2.get()
-            CkGetter().post_login(config["pioneer"]["phone"], config["pioneer"]["pwd"], self.logger)
-            self.is_pioneer_login = True
-        helper = Helper()
+        config['pioneer']['phone'] = self.input1.get()
+        config['pioneer']['pwd'] = self.input2.get()
+        helper = Helper('pioneer')
         # helper.get_detail()
         self.course_list = []
         courses = helper.get_study_course()
@@ -167,7 +163,7 @@ class PostmanApplication(tk.Frame):
         if work_cache is not None:
             work_list = ast.literal_eval(work_cache[3])
         else:
-            helper = Helper()
+            helper = Helper('pioneer')
             work_list = helper.get_detail(cid)
         for work in work_list:
             work_name = work["name"]

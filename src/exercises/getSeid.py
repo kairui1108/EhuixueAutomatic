@@ -7,12 +7,12 @@ from .keeper import status
 class Getter:
     base_url = "https://www.ehuixue.cn/index/study/joinquiz?eid="
 
-    def __init__(self):
+    def __init__(self, session_name):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
             'accept': '*/*'
         }
-        self.session = status["session"]
+        self.session = status["session_" + str(session_name)]
 
     def get_by_eid(self, eid):
         url = self.base_url + str(eid)
