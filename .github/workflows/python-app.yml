@@ -48,10 +48,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag_name: 1.2.0
-        release_name: 1.2.0
+        tag_name: 1.2.1
+        release_name: 1.2.1
         body: |
-          Release 1.2.0
+          Release 1.2.1
         draft: false
         prerelease: false
     - name: Upload Release Asset
