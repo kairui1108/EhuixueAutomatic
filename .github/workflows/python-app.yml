@@ -29,8 +29,6 @@ jobs:
         pip install -r requirements.txt
     - name: build
       run: |
-        python3 setup_exercise.py build
-        python3 setup_video.py build
         python3 setup.py
 
     - name: Upload artifact
