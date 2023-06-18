@@ -51,12 +51,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: |
-          dist/ehx_toolBox.exe
-          dist/ehx_work.exe
-          dist/ehx_video.exe
-        asset_name: |
-          ehx_toolBox.exe
-          ehx_work.exe
-          ehx_video.exe
+        asset_path: ["dist/ehx_toolBox.exe", "dist/ehx_work.exe", "dist/ehx_video.exe"]
+        asset_name: ["ehx_toolBox.exe", "ehx_work.exe", "ehx_video.exe"],
         asset_content_type: application/octet-stream
