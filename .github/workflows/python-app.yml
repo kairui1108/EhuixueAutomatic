@@ -45,7 +45,7 @@ jobs:
         draft: false
         prerelease: false
     - name: Upload Release Asset
-      id: upload-release-asset
+      id: upload-release-asset1
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -55,7 +55,7 @@ jobs:
         asset_name: ehx工具箱.exe
         asset_content_type: application/octet-stream
     - name: Upload Release Asset
-        id: upload-release-asset
+        id: upload-release-asset2
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
@@ -65,7 +65,7 @@ jobs:
           asset_name: ehx作业.exe
           asset_content_type: application/octet-stream
     - name: Upload Release Asset
-        id: upload-release-asset
+        id: upload-release-asset3
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
