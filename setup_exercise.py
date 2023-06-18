@@ -6,7 +6,7 @@ if __name__ == '__main__':
     opts = ['src/exercises/gui.py',
             '-F',
             '--noconsole',
-            '--name', 'ehx作业',
+            '--name', 'ehx_work',
             '--add-data', 'ehuixue.ico;.',
             '--hidden-import',
             'pkg_resources.py2_warn',

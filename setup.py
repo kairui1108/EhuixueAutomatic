@@ -6,7 +6,7 @@ if __name__ == '__main__':
     opts = ['MainAppGui.py',
             '-F',
             '--noconsole',
-            '--name', 'ehx工具箱',
+            '--name', 'ehx_toolBox',
             '--add-data', 'chromedriver;.',
             '--add-data', 'ehuixue.ico;.',
             '--hidden-import',

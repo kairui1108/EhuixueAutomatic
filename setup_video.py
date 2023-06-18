@@ -6,7 +6,7 @@ if __name__ == '__main__':
     opts = ['src/videos/AppGui.py',
             '-F',
             '--noconsole',
-            '--name', 'ehx视频',
+            '--name', 'ehx_video',
             '--add-data', 'ehuixue.ico;.',
             '--hidden-import',
             'pkg_resources.py2_warn',
