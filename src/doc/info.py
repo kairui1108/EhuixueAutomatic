@@ -1,7 +1,7 @@
 
-msg = "你好 \n" \
-      "第二行 \n" \
-      "第三行 \n" \
-      "第四行\n" \
-      "第五行 \n" \
-      "第六行 \n"
+msg = "开源项目，禁止售卖 \n" \
+      "详细使用教程，请见Github\n" \
+      "欢迎提交bug\n" \
+      "开源地址： \n" \
+      "https://github.com/kairui1108/EhuixueAutomatic\n" \
+

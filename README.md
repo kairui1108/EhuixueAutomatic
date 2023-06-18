@@ -1,68 +1,32 @@
-# e会学 小助手
+# e会学工具箱
 
 ## About
 
-本项目是针对安徽省智慧教育平台"e会学"的随堂练习，作业，测验，视频的全自动化脚本，基于python3实现，上手使用需要一定基础
+本项目是针对安徽省智慧教育平台"e会学"的的全自动化脚本，支持全自动播放视频，自动跳过随堂任务，支持部分作业题目自动作答，同时提供gui界面傻瓜式操作
 
 ## How to use
 
-### 1.使用前提
+### 1.使用教程
 
-**练习题部分：**
-- 作业提交后可以显示正确答案的题目
-- 课程的试题非随机的，即每个账号的题目一样（不在乎正确率的话也可以用）
-- 准备一个小号用于获取正确答案
-- 配置好相关开发环境，python, mysql
+**作业部分：**
+- 通过解析已完成试题获得正确答案（请确保提交试卷后可以获取正确答案）
+- 准备小号用于获取正确答案
+- 指定课程和习题后开始运行脚本
+
+![](./images/ehx_gui_1.png)
 
 **视频部分：**
-- 视频脚本基于selenium，故需要提取安装好与你浏览器（暂时只支持谷歌）版本一致的驱动
-- 如果视频有验证码检测的话还需要准备一个api账号，用于识别验证码
+- 确保已安装最新版Chrome或使用与Chrome版本对应的Chrome driver
+- 获取课程后指定课程运行脚本
+- 目前只支持检测随堂练习和随机验证码两种随堂任务
+- 使用验证码api时，填入下方api网站的账号密码即可
+
+![](./images/ehx_gui_2.png)
 
 > 浏览器驱动下载地址：https://chromedriver.chromium.org/downloads
 > 
 > 验证码识别api注册地址：http://www.ttshitu.com/
 
-### 2.运行脚本
+## 免责声明
 
-- 克隆代码
-
-  ```git clone https://github.com/kairui1108/EhuixueAutomatic.git```
-
-- 安装依赖
-
-  ``` pip3 install -r requirements.txt ```
-
-- 建表
-  > 建议使用pycharm配置好datasource后直接运行sql脚本
-
-- 修改配置文件
-  - database: 数据库相关配置
-  - pioneer_cookie: 小白鼠账号ck
-  - todo_user_cookie: 你的账号ck
-  - start_eid: 每个课程的作业题和随堂练习题中的第一个习题的eid，通过抓包或网页源码获取
-  - end_eid: 同上，是最后一个习题的eid
-  
-- 运行代码
-
-进入相应目录，执行脚本
-  
-  ```shell
-  python3 main.py
-  or
-  python3 app.py
-  ```
-  
-  > 建议先根据main.py中的注释，选择性的打开注释或关闭注释
-  
-## 刷题运行效果
-
-![](./images/ehx_debug3.png)
-![](./images/ehx_debug4.png)
-![](./images/ehx_debug5.png)
-![](./images/ehx_debug2.png)
-![](./images/ehx_debug.png)
-![](./images/ehx1.png)
-![](./images/ehx2.png)
-![](./images/ehx3.png)
-
-
+该脚本是根据我个人的需求和经验编写的，仅供参考和学习之用。使用该脚本所带来的所有风险和责任均由使用者自行承担。作者不对该脚本的适用性、准确性、完整性、可靠性、可用性或其他任何方面做出任何明示或暗示的保证或担保。作者不对因使用该脚本而造成的任何直接、间接、偶然、特殊或后果性损失或损害承担任何责任。使用者应该在使用该脚本前自行评估其适用性和风险，并采取适当的预防措施。

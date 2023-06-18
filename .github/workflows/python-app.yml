@@ -25,20 +25,12 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install cx_Freeze
         pip install -r requirements.txt
     - name: build
       run: |
-        python3 setup_exercise.py build
-        python3 setup_video.py build
+        python3 setup_exercise.py
+        python3 setup_video.py
         python3 setup.py
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: MainAppGui
-        path: dist/MainAppGui.exe
-
 
     - name: Create Release
       id: create_release
@@ -46,10 +38,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
-        tag_name: 1.2.1
-        release_name: 1.2.1
+        tag_name: 1.2.2
+        release_name: 1.2.2
         body: |
-          Release 1.2.1
+          Release 1.2.2
         draft: false
         prerelease: false
     - name: Upload Release Asset
@@ -59,6 +51,26 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/MainAppGui.exe
-        asset_name: MainAppGui.exe
+        asset_path: dist/ehx工具箱.exe
+        asset_name: ehx工具箱.exe
         asset_content_type: application/octet-stream
+    - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: dist/ehx作业.exe
+          asset_name: ehx作业.exe
+          asset_content_type: application/octet-stream
+    - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_relase.outputs.upload_url }}
+          asset_path: dist/ehx视频.exe
+          asset_name: ehx视频.exe
+          asset_content_type: application/octet-stream
