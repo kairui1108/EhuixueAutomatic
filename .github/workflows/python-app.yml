@@ -49,12 +49,8 @@ jobs:
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      strategy:
-        matrix:
-          file_path: ["dist/ehx_toolBox.exe", "dist/ehx_work.exe", "dist/ehx_video.exe"]
-          file_name: ["ehx_toolBox.exe", "ehx_work.exe", "ehx_video.exe"]
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ${{ matrix.file_path }}
-        asset_name: ${{ matrix.file_name }}
+        asset_path: ["dist/ehx_toolBox.exe", "dist/ehx_work.exe", "dist/ehx_video.exe"]
+        asset_name: ["ehx_toolBox.exe", "ehx_work.exe", "ehx_video.exe"]
         asset_content_type: application/octet-stream
