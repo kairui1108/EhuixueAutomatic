@@ -54,13 +54,3 @@ jobs:
         asset_path: dist/ehx_toolBox.exe
         asset_name: ehx_toolBox.exe
         asset_content_type: application/octet-stream
-    - name: Upload Release Asset
-      id: upload-release-asset
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_relase.outputs.upload_url }}
-        asset_path: dist/ehx_video.exe
-        asset_name: ehx_video.exe
-        asset_content_type: application/octet-stream
