@@ -55,22 +55,22 @@ jobs:
         asset_name: ehx工具箱.exe
         asset_content_type: application/octet-stream
     - name: Upload Release Asset
-        id: upload-release-asset2
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/ehx作业.exe
-          asset_name: ehx作业.exe
-          asset_content_type: application/octet-stream
+      id: upload-release-asset2
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: dist/ehx作业.exe
+        asset_name: ehx作业.exe
+        asset_content_type: application/octet-stream
     - name: Upload Release Asset
-        id: upload-release-asset3
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_relase.outputs.upload_url }}
-          asset_path: dist/ehx视频.exe
-          asset_name: ehx视频.exe
-          asset_content_type: application/octet-stream
+      id: upload-release-asset3
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_relase.outputs.upload_url }}
+        asset_path: dist/ehx视频.exe
+        asset_name: ehx视频.exe
+        asset_content_type: application/octet-stream
