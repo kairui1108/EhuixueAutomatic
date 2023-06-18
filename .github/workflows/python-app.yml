@@ -45,32 +45,16 @@ jobs:
         draft: false
         prerelease: false
     - name: Upload Release Asset
-      id: upload-release-asset1
+      id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      strategy:
+        matrix:
+          file_path: ["dist/ehx_toolBox.exe", "dist/ehx_work.exe", "dist/ehx_video.exe"]
+          file_name: ["ehx_toolBox.exe", "ehx_work.exe", "ehx_video.exe"]
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/ehx_toolBox.exe
-        asset_name: ehx_toolBox.exe
-        asset_content_type: application/octet-stream
-    - name: Upload Release Asset
-      id: upload-release-asset2
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: dist/ehx_work.exe
-        asset_name: ehx_work.exe
-        asset_content_type: application/octet-stream
-    - name: Upload Release Asset
-      id: upload-release-asset3
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_relase.outputs.upload_url }}
-        asset_path: dist/ehx_video.exe
-        asset_name: ehx_video.exe
+        asset_path: ${{ matrix.file_path }}
+        asset_name: ${{ matrix.file_name }}
         asset_content_type: application/octet-stream
